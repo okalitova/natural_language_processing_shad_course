@@ -1,0 +1,43 @@
+The simplest model:
+On 1K model1: recall 0.372; precision 0.390; aer 0.619
+Corpus normalization:
+On 1K model1 + on cs lemmas: recall 0.452; precision 0.472; aer 0.538
+On 1K model1 + on cs lemmas + lower case: recall 0.457; precision 0.475; aer 0.534
+On 1K model1 + on cs lemmas + lower case + remove diacritics: recall 0.457; precision 0.475; aer 0.534
+On 1K model1 + on cs lemmas + lc + rd + truncating to 6(optimal) symbols: recall 0.482; precision 0.500; aer 0.509
+I carried out few normalization experiments that didn't perform well on 1K corpus, but when I tried them on 10K corpus(as I was surprised) that improved score for a little bit.
+So I continued to test on 10K corpus as it wasn't much slower.
+On 1K model1 + on cs lemmas + lc + rd + truncating to 6(optimal) symbols + cast rare words to tags: recall 0.474; precision 0.494; aer 0.516
+On 1K model1 + on cs lemmas + lc + rd + truncating to 6(optimal) symbols + number normalization: recall 0.474; precision 0.491; aer 0.518
+So testing on 10K corpus. Normalization is kinda fixed.(not really)
+On 10K model1 on cs lemmas + lc + rd + truncating to 6(optimal) symbols: recall 0.537; aer 0.472
+On 10K model1 + simple prior model + on cs lemmas + lc + rd + truncating to 6(optimal) symbols: recall 0.537; aer 0.457
+On 10K model1 + simple prior model + on cs lemmas + lc + rd + truncating to 6(optimal) symbols + number normalization: recall 0.537; precision 0.562; aer 0.451
+At this point I kinda gave up and started implementing of HMM.
+Then after a while I decided to try to change the initial prior probability distribution to depend on i - j. And it preformed amazingly.
+It gave me the score of 0.416.
+On 10K model1 + simple prior model + lemmas + lc + rd + truncate6 symbols: aer 0.416
+Then I played with initial distribution for a while that gave me: aer 0.413
+So it was kinda close so I decided to maybe change my normalization.
+I don't exactly remember but maybe at this point I removed number normalization.
+But the important part: the most significant score changes were because of truncating so I tried other truncating
+ and truncate4 gave me score of 0.397 on dev.
+Then I thought that maybe my simple prior model is not super perfect or maybe it overfitted and I
+ just wanted to try run model without it. And this gave me 0.380 on dev. So I suppose that
+ simple prior model was overfitted.
+This solution gave me the score of 0.380 on dev and 0.369(or smth) on test.
+...
+I also tried to finish (I mean debug) my HMM model, but it was to late (or early?:) )
+So I will attached partly implemented HMM model as well.
+...
+The last experiments:
+stemming of english corpus using nltk: aer 0.418 ( =( truncating rules!)
+stemming + trunc4: aer 0.382
+4 iterations instead of 5: 0.385
+4 interations insted of 5 with simple prior model: 0.400
+
+So final model is the model1 with initial prior probabilities depending on i - j
+with normalization (lower, diacritics, truncating 4)
+
+Em.. someone just recommended in the chat to set manually equel words probabilities: aer 0.371
+on test: aer 0.346
