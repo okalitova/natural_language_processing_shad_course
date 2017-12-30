@@ -1,0 +1,11 @@
+.ipynb_checkpoints
+:
+*.pyc
+*~
+__pycache__
+./hw2/plain/train
+./hw2/full
+./hw4/pos_tagger
+GoogleNews-vectors-negative300.bin
+
+
